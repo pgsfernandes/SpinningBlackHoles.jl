@@ -4,6 +4,7 @@ global const Nx=40
 global const Ny=8
 include("../../src/SpinningBlackHoles.jl")
 using .SpinningBlackHoles, NLsolve, DelimitedFiles, Cubature
+LoadSystem()
 
 global const NFields=5
 #DEFINE BOUNDARY CONDITIONS AT THE HORIZON

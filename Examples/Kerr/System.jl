@@ -2,8 +2,10 @@
 global const Nx=40
 #DEFINE RESOLUTION IN y
 global const Ny=8
-include("../../src/SpinningBlackHoles.jl")
-using .SpinningBlackHoles, NLsolve, DelimitedFiles, Cubature
+
+using SpinningBlackHoles, NLsolve, DelimitedFiles, Cubature
+
+LoadSystem()
 
 global const NFields=4
 #DEFINE BOUNDARY CONDITIONS AT THE HORIZON

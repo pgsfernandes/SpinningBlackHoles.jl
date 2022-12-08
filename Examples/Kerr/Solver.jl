@@ -1,4 +1,4 @@
-function OneSolution(WBC::Float64, rh::Float64, spin::Bool=true, tol::Float64=1e-11; guess=nothing, branch::Int64=1, ToPrint::Bool=false, ergosphere::Bool=false, light_ring::Bool=false, isco::Bool=false, petrov::Bool=false, sphericity::Bool=false, linvel::Bool=false)
+function OneSolution(;WBC::Float64, rh::Float64, spin::Bool=true, tol::Float64=1e-11, guess=nothing, branch::Int64=1, ToPrint::Bool=false, ergosphere::Bool=false, light_ring::Bool=false, isco::Bool=false, petrov::Bool=false, sphericity::Bool=false, linvel::Bool=false)
     #FUNCTION TO COMPUTE ONE KERR BLACK HOLE SOLUTION.
     #WBC IS THE VALUE CONCERNING THE BOUNDARY CONDITION OF THE FUNCTION W: THE DIMENSIONLESS SPIN χ IF "spin" IS TRUE, OR THE ANGULAR VELOCITY OF THE HORIZON Ωh IF "spin" IS FALSE. rh IS THE HORIZON RADIUS, tol DEFINES THE TOLERANCE TO DECLARE CONVERGENCE (NORM DIFFERENCE IN THE SPECTRAL COEFFICIENTS BETWEEN TWO CONSECUTIVE ITERATIONS), guess IS AN INITIAL GUESS THAT CAN BE IMPORTED FROM DATA FILES (OTHERWISE A PERTURBED COMPARABLE KERR BH WILL BE USED), branch CONCERNTS THE TWO BRANCHES OF KERR SOLUTIONS (IMPORTANT IF Ωh IS USED AS BC FOR W), ToPrint PRINTS THE SOLUTIONS TO A .DAT FILE, ergosphere PRINTS THE REGION OF THE ERGOSPHERE IF SET TO true, light_ring COMPUTES THE LIGHT RINGS OF THE SOLUTION IF SET TO true (SIMILAR FOR ISCO), petrov PRINTS A FILE WITH THE VALUE OF THE LORENTZ INVARIANT SCALARS ACROSS THE SPACETIME TO DETERMINE THE PETROV TYPE, sphericity COMPUTES THE SPHERICITY OF THE SOLUTION, AND linvel COMPUTES THE LINEAR VELOCITY OF THE HORIZON.
     println()
@@ -103,9 +103,9 @@ function OneSolution(WBC::Float64, rh::Float64, spin::Bool=true, tol::Float64=1e
 end
 
 #OBTAIN ONE SOLUTION WITH χ=0.6
-#@time OneSolution(0.3,1.0,true,1e-10,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
+#OneSolution(WBC=0.3,rh=1.0,spin=true,tol=1e-10,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
 
 #OBTAIN ONE SOLUTION WITH Ωh=1/15
-@time OneSolution(1.0/15.0,1.0,false,1e-10,branch=1,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
+OneSolution(WBC=1.0/15.0,rh=1.0,spin=false,tol=1e-10,branch=1,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
 
 nothing

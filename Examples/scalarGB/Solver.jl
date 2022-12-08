@@ -61,7 +61,7 @@ function ϕpert(x::Float64,A::Float64)
     return A * (415-1047 * x+942 * x^2-358 * x^3+51 * x^4-3 * x^5)/(12 * (-3+x)^6)
 end
 
-function OneSolution(WBC::Float64, rh::Float64, A::Float64, spin::Bool=true, tol::Float64=1e-11; guess=nothing, branch::Int64=1, ToPrint::Bool=false, ergosphere::Bool=false, light_ring::Bool=false, isco::Bool=false, petrov::Bool=false, sphericity::Bool=false, linvel::Bool=false)
+function OneSolution(;WBC::Float64, rh::Float64, A::Float64, spin::Bool=true, tol::Float64=1e-11, guess=nothing, branch::Int64=1, ToPrint::Bool=false, ergosphere::Bool=false, light_ring::Bool=false, isco::Bool=false, petrov::Bool=false, sphericity::Bool=false, linvel::Bool=false)
     #FUNCTION TO COMPUTE ONE GB BLACK HOLE SOLUTION.
     #WBC IS THE VALUE CONCERNING THE BOUNDARY CONDITION OF THE FUNCTION W: THE DIMENSIONLESS SPIN χ IF "spin" IS TRUE, OR THE ANGULAR VELOCITY OF THE HORIZON Ωh IF "spin" IS FALSE. rh IS THE HORIZON RADIUS, A = α/rh^2, tol DEFINES THE TOLERANCE TO DECLARE CONVERGENCE (NORM DIFFERENCE IN THE SPECTRAL COEFFICIENTS BETWEEN TWO CONSECUTIVE ITERATIONS), guess IS AN INITIAL GUESS THAT CAN BE IMPORTED FROM DATA FILES (OTHERWISE A COMPARABLE KERR BH WILL BE USED), branch CONCERNS THE TWO BRANCHES OF KERR SOLUTIONS (IMPORTANT IF Ωh IS USED AS BC FOR W), ToPrint PRINTS THE SOLUTIONS TO A .DAT FILE, ergosphere PRINTS THE REGION OF THE ERGOSPHERE IF SET TO true, light_ring COMPUTES THE LIGHT RINGS OF THE SOLUTION IF SET TO true (SIMILAR FOR ISCO), petrov PRINTS A FILE WITH THE VALUE OF THE LORENTZ INVARIANT SCALARS ACROSS THE SPACETIME TO DETERMINE THE PETROV TYPE, sphericity COMPUTES THE SPHERICITY OF THE SOLUTION, AND linvel COMPUTES THE LINEAR VELOCITY OF THE HORIZON.
     println()
@@ -179,12 +179,12 @@ function OneSolution(WBC::Float64, rh::Float64, A::Float64, spin::Bool=true, tol
 end
 
 #OBTAIN ONE SOLUTION WITH χ=0.6
-@time OneSolution(0.6,1.0,1.0,true,1e-10,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
+OneSolution(WBC=0.6,rh=1.0,A=1.0,spin=true,tol=1e-10,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
 
 #OBTAIN ONE SOLUTION WITH Ωh=1/15
-#@time OneSolution(1.0/15.0,1.0,2.0,false,1e-10,branch=1,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
+#OneSolution(WBC=1.0/15.0,rh=1.0,A=1.0,spin=false,tol=1e-10,branch=1,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
 
 #EXAMPLE ON HOW TO OBTAIN ONE SOLUTION USING A guess AS INITTIAL GUESS
-#@time OneSolution(1.0/15.0,1.0,2.0,false,1e-8,guess=vcat(readdlm("func_f.dat"),readdlm("func_g.dat"),readdlm("func_h.dat"),readdlm("func_W.dat"),readdlm("func_p.dat")),branch=1,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
+#OneSolution(WBC=1.0/15.0,rh=1.0,A=1.0,spin=false,tol=1e-10,guess=vcat(readdlm("func_f.dat"),readdlm("func_g.dat"),readdlm("func_h.dat"),readdlm("func_W.dat"),readdlm("func_p.dat")),branch=1,ToPrint=false,ergosphere=false,petrov=false,light_ring=false,isco=false,sphericity=false,linvel=false)
 
 nothing

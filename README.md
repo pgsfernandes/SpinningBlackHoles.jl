@@ -6,9 +6,10 @@ If you use SpinningBlackHoles you are kindly asked to cite the following paper i
 @article{SpinningBlackHoles,
     author = "Fernandes, Pedro G. S. and Mulryne, David J.",
     title = "{A new approach and code for spinning black holes in modified gravity}",
-    eprint = "",
+    eprint = "2212.07293",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
+    month = "12",
     year = "2022"
 }
 ```

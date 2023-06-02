@@ -6,9 +6,13 @@ end
 
 function (F::Field)(x::Float64,y::Float64, Nx::Integer=Nx, Ny::Integer=Ny; dx::Integer=0,dy::Integer=0)
     s=0
+    type = F.type
+    a = F.a
+    aux = type==3 ? 1 : 0
+
     for jj in 1:Nx
         for kk in 1:Ny
-            s+=(F.a)[jj,kk] * dT(jj-1,x,dx) * dTrig(kk-1,y,dy,F.type)
+            s+=a[jj,kk] * dT(jj-1,x,dx) * dTrig(kk-1+aux,y,dy,type)
         end
     end
     return s

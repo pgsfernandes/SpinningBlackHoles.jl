@@ -91,12 +91,14 @@ function interpolate(f::Function,Nx::Integer,Ny::Integer,type::Integer)
 end
 
 function interpolate!(F::Field,f::Function,Nx::Integer,Ny::Integer)
-    F.a=zeros(Float64, (Nx,Ny))
+    #F.a=Array{Float64, 2}(undef, Nx, Nx)
     type=F.type
     x = Array{Float64, 1}(undef, Nx)
     y = Array{Float64, 1}(undef, Ny)
     cheb=Array{Float64, 2}(undef, Nx, Nx)
     trig=Array{Float64, 2}(undef, Ny, Ny)
+
+    aux = type==3 ? 1 : 0
     
     for i in 1:Nx
         x[i] = -cos((2*i-1.0)/(2*Nx)*pi)
@@ -113,19 +115,19 @@ function interpolate!(F::Field,f::Function,Nx::Integer,Ny::Integer)
 
     for k in 0:Ny-1
         for i in 0:Ny-1
-            trig[k+1,i+1] = dTrig(k,y[i+1],0,type)
+            trig[k+1,i+1] = dTrig(k+aux,y[i+1],0,type)
         end
     end
     
+    coeff_aux = 4.0 / (Nx * Ny)
+
     for j in 0:(Nx-1)
         for k in 0:(Ny-1)
+            #coeff = (k == 0 && (type == 2 || type == 4)) ? 2.0 * coeff_aux : coeff_aux
+            coeff = (k == 0 && type!= 1) ? 2.0 * coeff_aux : coeff_aux
             for x_it in 1:Nx
                 for y_it in 1:Ny
-                    if k==0 && (type == 2 || type == 4)
-                        (F.a)[j+1,k+1] += 8.0/(Nx*Ny) * f(x[x_it],y[y_it]) * cheb[j+1,x_it] * trig[k+1,y_it]
-                    else
-                        (F.a)[j+1,k+1] += 4.0/(Nx*Ny) * f(x[x_it],y[y_it]) * cheb[j+1,x_it] * trig[k+1,y_it]
-                    end
+                    (F.a)[j+1,k+1] += coeff * f(x[x_it],y[y_it]) * cheb[j+1,x_it] * trig[k+1,y_it]
                 end
             end
         end
@@ -182,7 +184,7 @@ function dT(n::Integer,x::Float64,dx::Integer=0)
 end
 
 #COMPUTES THE EVEN COSINE OF ORDER n (OR ITS dy DERIVATIVE) AT POINT y
-function dTrig(n::Integer,y::Float64,dy::Integer=0,type::Integer=1)
+function dTrig(n::Integer,y,dy::Integer=0,type::Integer=1)
     if dy == 0
         if type==1
             return cos(2*n*y)
@@ -234,10 +236,11 @@ end
 function GetTrig(Ny::Integer,y::Vector{Float64})
     C = zeros((3,Ny,Ny+2,4))
     for t in 1:4
+        aux = t==3 ? 1 : 0
         for i in 0:2
             for j in 0:Ny-1
                 for k in 1:Ny+2
-                    C[i+1,j+1,k,t] = dTrig(j,y[k],i,t)
+                    C[i+1,j+1,k,t] = dTrig(j+aux,y[k],i,t)
                 end
             end
         end

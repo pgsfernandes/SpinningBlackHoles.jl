@@ -9,8 +9,12 @@ If you use SpinningBlackHoles you are kindly asked to cite the following paper i
     eprint = "2212.07293",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
-    month = "12",
-    year = "2022"
+    doi = "10.1088/1361-6382/ace232",
+    journal = "Class. Quant. Grav.",
+    volume = "40",
+    number = "16",
+    pages = "165001",
+    year = "2023"
 }
 ```
 The user is also referred to this reference for details concerning the physics and mathematical setup involved.

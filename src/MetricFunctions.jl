@@ -1,4 +1,4 @@
-function gtt(x::Float64, y::Float64, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
+function gtt(x, y, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
     if dx==0
         return -1/4*f(x,y)*(1+x)^2 + g(x,y)*sin(y)^2*W(x,y)^2*(1-x)^2/(4*f(x,y))
     elseif dx==1
@@ -16,7 +16,7 @@ function gtt(x::Float64, y::Float64, f::Field, g::Field, h::Field, W::Field,rh::
     end
 end
 
-function gtphi(x::Float64, y::Float64, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
+function gtphi(x, y, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
     if dx==0
         return -rh*g(x,y)*sin(y)^2*W(x,y)/f(x,y)
     elseif dx==1
@@ -34,7 +34,7 @@ function gtphi(x::Float64, y::Float64, f::Field, g::Field, h::Field, W::Field,rh
     end
 end
 
-function gphiphi(x::Float64, y::Float64, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
+function gphiphi(x, y, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
     if dx==0
         return 4*rh^2*g(x,y)*sin(y)^2/((-1+x)^2*f(x,y))
     elseif dx==1
@@ -52,7 +52,7 @@ function gphiphi(x::Float64, y::Float64, f::Field, g::Field, h::Field, W::Field,
     end
 end
 
-function grr(x::Float64, y::Float64, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
+function grr(x, y, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
     if dx==0
         return (g(x,y)*h(x,y))/f(x,y)
     elseif dx==1
@@ -70,7 +70,7 @@ function grr(x::Float64, y::Float64, f::Field, g::Field, h::Field, W::Field,rh::
     end
 end
 
-function gthetatheta(x::Float64, y::Float64, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
+function gthetatheta(x, y, f::Field, g::Field, h::Field, W::Field,rh::Float64=1.0;dx::Integer=0,dr::Bool=false)
     if dx==0
         return (4*rh^2*g(x,y)*h(x,y))/((-1 + x)^2*f(x,y))
     elseif dx==1

@@ -18,7 +18,8 @@ function ISCO_eq_minus(x::Float64,f::Field, g::Field, h::Field, W::Field,rh::Flo
     end
 end
 
-function ISCO(f::Field, g::Field, h::Field, W::Field,rh::Float64,q::Float64=0.0)
+#function ISCO(f::Field, g::Field, h::Field, W::Field,rh::Float64,q::Float64=0.0; guess_minus = nothing, guess_plus = nothing)
+function ISCO(f::Field, g::Field, h::Field, W::Field,rh::Float64,q::Float64=0.0; guess = nothing)
     y=pi/2
     M=GetMass(f,g,h,W,rh)
     j=GetJ(f,g,h,W,rh)
@@ -39,8 +40,26 @@ function ISCO(f::Field, g::Field, h::Field, W::Field,rh::Float64,q::Float64=0.0)
     rbl_minus=M*find_zero(r->4*(q^2-r)*(sqrt(r-q^2)+chi)^2+r*(q^2+(r-2)*r+chi^2),rbl_minus)
     rbl_plus=M*find_zero(r->4*(q^2-r)*(sqrt(r-q^2)-chi)^2+r*(q^2+(r-2)*r+chi^2),rbl_plus)
 
-    guess_plus=rBLKerr2x(rbl_plus,rhK,chi,q)
-    guess_minus=rBLKerr2x(rbl_minus,rhK,chi,q)
+    xkerr_plus=rBLKerr2x(rbl_plus,rhK,chi,q)
+    xkerr_minus=rBLKerr2x(rbl_minus,rhK,chi,q)
+
+    #=
+    if isnothing(guess_minus)
+        guess_minus = xkerr_minus
+        #guess_minus = rBLKerr2x(rbl_minus/2.0,rhK,chi,q)
+    end
+    if isnothing(guess_plus)
+        guess_plus = xkerr_plus
+        #guess_plus = rBLKerr2x(rbl_plus*8.0,rhK,chi,q)
+    end
+    =#
+    if isnothing(guess)
+        guess_minus = xkerr_minus
+        guess_plus = xkerr_plus
+    else
+        guess_plus = guess[1]
+        guess_minus = guess[2]
+    end
 
     sol_plus = fzero(x->ISCO_eq_plus(x,f,g,h,W,rh,static),guess_plus)
     sol_minus = fzero(x->ISCO_eq_minus(x,f,g,h,W,rh,static),guess_minus)
@@ -55,8 +74,8 @@ function ISCO(f::Field, g::Field, h::Field, W::Field,rh::Float64,q::Float64=0.0)
     wKerr_plus= (rbl_plus^2*sqrt(M*(rbl_plus-M*q^2)) + M^3*q^2*chi - M^2*rbl_plus*chi) / (rbl_plus^4+M^3*(M*q^2-rbl_plus)*chi^2)
     wKerr_minus= (-rbl_minus^2*sqrt(M*(rbl_minus-M*q^2)) + M^3*q^2*chi - M^2*rbl_minus*chi) / (rbl_minus^4+M^3*(M*q^2-rbl_minus)*chi^2)
 
-    RKerr_plus = 2*rhK*sqrt(gKerrN(guess_plus,y,rhK,0.0,chi,q)/((-1+guess_plus)^2*fKerrN(guess_plus,y,rhK,0.0,chi,q)))
-    RKerr_minus = 2*rhK*sqrt(gKerrN(guess_minus,y,rhK,0.0,chi,q)/((-1+guess_minus)^2*fKerrN(guess_minus,y,rhK,0.0,chi,q)))
+    RKerr_plus = 2*rhK*sqrt(gKerrN(xkerr_plus,y,rhK,0.0,chi,q)/((-1+xkerr_plus)^2*fKerrN(xkerr_plus,y,rhK,0.0,chi,q)))
+    RKerr_minus = 2*rhK*sqrt(gKerrN(xkerr_minus,y,rhK,0.0,chi,q)/((-1+xkerr_minus)^2*fKerrN(xkerr_minus,y,rhK,0.0,chi,q)))
 
     R_plus = CircumferencialRadius(sol_plus,f,g,h,W,rh)
     R_minus = CircumferencialRadius(sol_minus,f,g,h,W,rh)
@@ -67,5 +86,5 @@ function ISCO(f::Field, g::Field, h::Field, W::Field,rh::Float64,q::Float64=0.0)
     println("Retrogade (counter-rotating) Circular Orbit of Massive Particles Located at x = ", sol_minus, ". r/rh = ", 2/(1-sol_minus), ". Circumferencial Radius/M = ", R_minus/M, ". Coordinate shift w.r.t. KerrN (x-xKerrN) = ", sol_minus-guess_minus, ". Difference to Comparable KerrN (R/RKerrN-1) = ", R_minus/RKerr_minus-1, ". ω*M = ", w_minus*M, ". ω/ωKerrN - 1 = ", w_minus/wKerr_minus-1)
     println()
 
-    return [R_plus/RKerr_plus-1, w_plus/wKerr_plus-1, R_minus/RKerr_minus-1, w_minus/wKerr_minus-1]
+    return [R_plus/RKerr_plus-1, w_plus/wKerr_plus-1, R_minus/RKerr_minus-1, w_minus/wKerr_minus-1, sol_plus, sol_minus]
 end

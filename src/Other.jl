@@ -5,6 +5,16 @@ function PrintData(file_name::String,func)
     end
 end
 
+function write_data_to_file(filename,data)
+    file = open(filename, "a")
+        
+    # Write the vector to the file
+    writedlm(file, data', ", ")
+    
+    # Close the file
+    close(file)
+end
+
 function x2r(x::Float64,rh::Float64)
     return 2*rh/(1-x)
 end
